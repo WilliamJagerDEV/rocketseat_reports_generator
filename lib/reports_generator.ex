@@ -12,6 +12,8 @@ defmodule ReportsGenerator do
       :world
 
   """
+
+  # ReportsGenerator.hello
   def hello do
     :world
   end
