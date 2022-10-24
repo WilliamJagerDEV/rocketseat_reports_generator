@@ -1,6 +1,17 @@
 defmodule ReportsGenerator do
   # USAR COMANDO "chcp 65001" NO VSCODE PARA UTF8 NO TERMINAL CASO NÃO ESTEJA
 
+  @available_foods [
+    "açaí",
+    "churrasco",
+    "esfirra",
+    "hambúrguer",
+    "pastel",
+    "pizza",
+    "prato_feito",
+    "suchi"
+  ]
+
   # ===========================================================
   def build(filename) do
     # CASE MODE
@@ -34,13 +45,26 @@ defmodule ReportsGenerator do
     |> Enum.reduce(report_acc(), fn line, report ->
       sum_values(line, report)
     end)
-    |> fetch_heigher_cost()
+
+    # |> fetch_heigher_cost()
   end
 
-  defp report_acc, do: Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
+  defp report_acc do
+    users = Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
+    foods = Enum.into(@available_foods, %{}, &{&1, 0})
+    %{"users" => users, "foods" => foods}
+  end
 
-  defp sum_values([id, _food_name, price], report), do: Map.put(report, id, report[id] + price)
+  defp sum_values([id, food_name, price], %{"foods" => foods, "users" => users} = report) do
+    foods = Map.put(foods, food_name, foods[food_name] + 1)
+    users = Map.put(users, id, users[id] + price)
+
+    %{report | "users" => users, "foods" => foods}
+
+    # report
+    # |> Map.put("users", users)
+    # |> Map.put("foods", foods)
+  end
 
   defp fetch_heigher_cost(report), do: Enum.max_by(report, fn {_key, value} -> value end)
-
 end
