@@ -34,9 +34,13 @@ defmodule ReportsGenerator do
     |> Enum.reduce(report_acc(), fn line, report ->
       sum_values(line, report)
     end)
+    |> fetch_heigher_cost()
   end
 
   defp report_acc, do: Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
 
   defp sum_values([id, _food_name, price], report), do: Map.put(report, id, report[id] + price)
+
+  defp fetch_heigher_cost(report), do: Enum.max_by(report, fn {_key, value} -> value end)
+
 end
