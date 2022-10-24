@@ -1,18 +1,4 @@
 defmodule ReportsGenerator do
-  @moduledoc """
-  Documentation for `ReportsGenerator`.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ReportsGenerator.build("report_test.csv")
-      :world
-
-  """
-
   # USAR COMANDO "chcp 65001" NO VSCODE PARA UTF8 NO TERMINAL CASO NÃO ESTEJA
 
   # ===========================================================
@@ -23,11 +9,10 @@ defmodule ReportsGenerator do
     #   {:error, reason} -> reason
     # end
 
-    #PIPE & OVERLOAD MODE
+    # PIPE & OVERLOAD MODE
     "reports/#{filename}"
     |> File.read()
     |> handle_file("Arquivo: ")
-
   end
 
   # def handle_file({:ok, result}, msg), do: msg <> result
@@ -42,30 +27,16 @@ defmodule ReportsGenerator do
 
   # ===========================================================
 
-  # ReportsGenerator.start("report_test.csv")
+  # ReportsGenerator.start("report_complete.csv")
   def start(filename) do
-    "reports/#{filename}"
-    |> File.stream!()
-    # |> Enum.each(fn line -> IO.inspect(line) end)
-    # |> Enum.map(fn line -> parse_line(line) end)
+    filename
+    |> Parser.parse_file()
     |> Enum.reduce(report_acc(), fn line, report ->
-      [id, _food_name, price] = parse_line(line)
-      Map.put(report, id, report[id] + price)
-     end)
-
-  end
-
-  def parse_line(line) do
-    line
-    |> String.trim()
-    |> String.split(",")
-    # FUNÇÃO ANÔNIMA IMPLÍCITA COM & E /1
-    |> List.update_at(2, &String.to_integer/1)
+      sum_values(line, report)
+    end)
   end
 
   defp report_acc, do: Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
 
-
-
-
+  defp sum_values([id, _food_name, price], report), do: Map.put(report, id, report[id] + price)
 end
