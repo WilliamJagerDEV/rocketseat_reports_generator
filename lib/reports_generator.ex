@@ -73,11 +73,11 @@ defmodule ReportsGenerator do
 
   # defp fetch_heigher_cost(report), do: Enum.max_by(report, fn {_key, value} -> value end)
 
-  defp fetch_heigher_cost(report, option) when option in @options do
+  def fetch_heigher_cost(report, option) when option in @options do
     # IO.inspect(report, label: "HIGH")
     {:ok, Enum.max_by(report[option], fn {_key, value} -> value end)}
   end
 
-  defp fetch_heigher_cost(_report, _option), do: {:error, "Invalid Option"}
+  def fetch_heigher_cost(_report, _option), do: {:error, "Invalid Option"}
 
 end
