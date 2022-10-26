@@ -1,6 +1,11 @@
 defmodule ReportsGenerator do
   # USAR COMANDO "chcp 65001" NO VSCODE PARA UTF8 NO TERMINAL CASO NÃO ESTEJA
 
+  @options [
+    "foods",
+    "users"
+  ]
+
   @available_foods [
     "açaí",
     "churrasco",
@@ -9,7 +14,7 @@ defmodule ReportsGenerator do
     "pastel",
     "pizza",
     "prato_feito",
-    "suchi"
+    "sushi"
   ]
 
   # ===========================================================
@@ -45,11 +50,11 @@ defmodule ReportsGenerator do
     |> Enum.reduce(report_acc(), fn line, report ->
       sum_values(line, report)
     end)
-
     # |> fetch_heigher_cost()
   end
 
   defp report_acc do
+    # IO.puts("REPORT_ACC")
     users = Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
     foods = Enum.into(@available_foods, %{}, &{&1, 0})
     %{"users" => users, "foods" => foods}
@@ -66,5 +71,13 @@ defmodule ReportsGenerator do
     # |> Map.put("foods", foods)
   end
 
-  defp fetch_heigher_cost(report), do: Enum.max_by(report, fn {_key, value} -> value end)
+  # defp fetch_heigher_cost(report), do: Enum.max_by(report, fn {_key, value} -> value end)
+
+  defp fetch_heigher_cost(report, option) when option in @options do
+    # IO.inspect(report, label: "HIGH")
+    {:ok, Enum.max_by(report[option], fn {_key, value} -> value end)}
+  end
+
+  defp fetch_heigher_cost(_report, _option), do: {:error, "Invalid Option"}
+
 end
