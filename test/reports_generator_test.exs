@@ -119,7 +119,7 @@ defmodule ReportsGeneratorTest do
     test "when a file list is not provides, returns an error." do
       response = ReportsGenerator.start_from_many("banana")
 
-      expected_response = "banana"
+      expected_response = {:error, "Please provide a list of strings"}
       assert response == expected_response
     end
   end

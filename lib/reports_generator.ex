@@ -53,6 +53,11 @@ defmodule ReportsGenerator do
   # ReportsGenerator.start_from_many(["report_1.csv", "report_2.csv", "report_3.csv"])
   # :timer.tc(fn -> ReportsGenerator.start_from_many(["report_1.csv", "report_2.csv", "report_3.csv"]) end)
   # 393523/531353/400793/395980/562688
+
+  def start_from_many(file_names) when not is_list(file_names) do
+    {:error, "Please provide a list of strings"}
+  end
+  
   def start_from_many(file_names) do
     file_names
     # SINTAXE EXPLICITA
@@ -62,7 +67,7 @@ defmodule ReportsGenerator do
     |> Enum.reduce(report_acc(), fn {:ok, result}, report -> sum_reports(report, result) end)
   end
 
-  def start_from_many(file_names) when not is_list(file_names), do: {:error, "Please provide a list of strings."}
+
 
 
 
