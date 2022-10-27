@@ -18,6 +18,8 @@ defmodule ReportsGenerator do
   ]
 
   # ReportsGenerator.start("report_complete.csv")
+  # :timer.tc(fn -> ReportsGenerator.start("report_complete.csv") end)
+  # 1278464/1322496/1450905/1353011/1388236
   def start(file_name) do
     file_name
     |> Parser.parse_file()
@@ -48,6 +50,9 @@ defmodule ReportsGenerator do
 
 
 
+  # ReportsGenerator.start_from_many(["report_1.csv", "report_2.csv", "report_3.csv"])
+  # :timer.tc(fn -> ReportsGenerator.start_from_many(["report_1.csv", "report_2.csv", "report_3.csv"]) end)
+  # 393523/531353/400793/395980/562688
   def start_from_many(file_names) do
     file_names
     # SINTAXE EXPLICITA
@@ -56,6 +61,10 @@ defmodule ReportsGenerator do
     # > Task.async_stream(&start(/1))
     |> Enum.reduce(report_acc(), fn {:ok, result}, report -> sum_reports(report, result) end)
   end
+
+  def start_from_many(file_names) when not is_list(file_names), do: {:error, "Please provide a list of strings."}
+
+
 
   defp sum_reports(%{"foods" => foods1, "users" => users1}, %{"foods" => foods2, "users" => users2}) do
     users = merge_maps(users1, users2)
